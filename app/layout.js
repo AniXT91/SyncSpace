@@ -1,12 +1,11 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from '@clerk/nextjs';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { UserButton } from "@clerk/nextjs";
 
-const geistMono = Geist_Mono({
+
+const outFit = Outfit({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
@@ -18,12 +17,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={true}
+        className={`${outFit} antialiased`}
       >
+
         {children}
+
       </body>
     </html>
+    </ClerkProvider>
   );
 }
