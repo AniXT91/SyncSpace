@@ -1,43 +1,37 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { onSnapshot, query, collection, where } from "firebase/firestore";
-import { db } from "@/config/firebaseConfig";
-import { use } from "react";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
-export default function FirestoreDocList({ params: paramsPromise }) {
-  // Unwrap params
-  const params = use(paramsPromise);
-  const [docList, setDocList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (params) {
-      const q = query(
-        collection(db, "workspaceDocuments"),
-        where("workspaceId", "==", params?.workspaceId)
-      );
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push(doc.data());
-        });
-        setDocList(documents);
-        setIsLoading(false);
-      });
-      return () => unsubscribe();
-    }
-  }, [params]);
-
-  if (isLoading) {
-    // This placeholder is rendered on the client after hydration.
-    return <div>Loading...</div>;
-  }
+function DocList({ documentList, workspaceId, documentId }) {
+  const router = useRouter();
 
   return (
-    <>
-      <h1>Document List</h1>
-     
-    </>
+    <div>
+      {documentList.map((doc, index) => (
+        <div 
+          key={index}
+          onClick={() => router.push(`/workspace/${workspaceId}/${doc?.id}`)}
+          className={`mt-3 p-2 px-3 hover:bg-gray-200 
+          rounded-lg cursor-pointer flex justify-between items-center
+          ${doc?.id === documentId && 'bg-white'}`}
+        >
+          <div className='flex gap-2 items-center'>
+            {!doc.emoji && (
+              <Image 
+                src="/loopdocument.svg" 
+                alt="Document" 
+                width={20} 
+                height={20} 
+              />
+            )}
+            <h2 className='flex gap-2'>{doc?.emoji} {doc.documentName}</h2>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
+
+export default DocList;

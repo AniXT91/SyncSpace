@@ -52,6 +52,7 @@ function CreateWorkspace() {
         coverImage:null,
         emoji:null,
         id:docId,
+        documentName:'Untitled Document',
         documentContent:[]
       })
 
@@ -115,7 +116,7 @@ function CreateWorkspace() {
             >
               Create {loading && <Loader2Icon className='animate-spin ml-2' />}
             </Button>
-            <Button variant="outline" onClick={() => { /* Reset or navigate on cancel */ }}>
+            <Button variant="outline" onClick={() => { router.replace('/dashboard')}}>
               Cancel
             </Button>
           </div>
